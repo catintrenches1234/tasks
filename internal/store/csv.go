@@ -60,19 +60,43 @@ func LoadTasks(filepath string) ([]model.Task, error) {
 		}
 
 		task := model.Task{
-			ID: 			id,
-			Description: 	description,
-			CreatedAt: 		createdAt,
-			Completed: 		completed,
+			ID:          id,
+			Description: description,
+			CreatedAt:   createdAt,
+			Completed:   completed,
 		}
 
 		tasks = append(tasks, task)
 	}
 
-	return  tasks, nil
+	return tasks, nil
 }
 
 func SaveTasks(filepath string, tasks []model.Task) error {
+	f, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	if err := w.Write([]string{"ID", "Description", "CreatedAt", "Completed"}); err != nil {
+		return err
+	}
+
+	for _, task := range tasks {
+		record := []string{
+			strconv.Itoa(task.ID),
+			task.Description,
+			task.CreatedAt.Format(time.RFC3339),
+			strconv.FormatBool(task.Completed),
+		}
+		if err := w.Write(record); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
