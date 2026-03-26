@@ -12,7 +12,7 @@ import (
 )
 
 func LoadTasks(filepath string) ([]model.Task, error) {
-	f,err := os.Open(filepath)
+	f, err := os.Open(filepath)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +24,7 @@ func LoadTasks(filepath string) ([]model.Task, error) {
 
 	if _, err := r.Read(); err != nil {
 		if err == io.EOF {
-			return tasks, err
+			return tasks, nil
 		}
 		return nil, err
 	}
@@ -60,10 +60,10 @@ func LoadTasks(filepath string) ([]model.Task, error) {
 		}
 
 		task := model.Task{
-			ID: id,
-			Description: description,
-			CreatedAt: createdAt,
-			Completed: completed,
+			ID: 			id,
+			Description: 	description,
+			CreatedAt: 		createdAt,
+			Completed: 		completed,
 		}
 
 		tasks = append(tasks, task)
