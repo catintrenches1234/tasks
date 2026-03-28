@@ -12,6 +12,11 @@ import (
 )
 
 func LoadTasks(filepath string) ([]model.Task, error) {
+	filepath, err := resolvePath(filepath)
+	if err != nil {
+		return nil, err
+	}
+
 	f, err := os.Open(filepath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -76,6 +81,11 @@ func LoadTasks(filepath string) ([]model.Task, error) {
 }
 
 func SaveTasks(filepath string, tasks []model.Task) error {
+	filepath, err := resolvePath(filepath)
+	if err != nil {
+		return err
+	}
+
 	if err := ensureStoreDir(filepath); err != nil {
 		return err
 	}

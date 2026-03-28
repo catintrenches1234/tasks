@@ -4,10 +4,31 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/catintrenches1234/tasks/internal/model"
 )
+
+func resolvePath(path string) (string, error) {
+	if path == "~" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		return home, nil
+	}
+
+	if strings.HasPrefix(path, "~/") {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		return filepath.Join(home, path[2:]), nil
+	}
+
+	return path, nil
+}
 
 func ensureStoreDir(path string) error {
 	dir := filepath.Dir(path)
@@ -15,6 +36,11 @@ func ensureStoreDir(path string) error {
 }
 
 func AddTask(filepath string, description string) error {
+	filepath, err := resolvePath(filepath)
+	if err != nil {
+		return err
+	}
+
 	if err := ensureStoreDir(filepath); err != nil {
 		return err
 	}
@@ -55,6 +81,11 @@ func AddTask(filepath string, description string) error {
 }
 
 func ListTasks(filepath string, showAll bool) ([]model.Task, error) {
+	filepath, err := resolvePath(filepath)
+	if err != nil {
+		return nil, err
+	}
+
 	tasks, err := LoadTasks(filepath)
 	if err != nil {
 		return nil, err
@@ -75,6 +106,11 @@ func ListTasks(filepath string, showAll bool) ([]model.Task, error) {
 }
 
 func CompleteTask(filepath string, id int) error {
+	filepath, err := resolvePath(filepath)
+	if err != nil {
+		return err
+	}
+
 	if err := ensureStoreDir(filepath); err != nil {
 		return err
 	}
@@ -112,6 +148,11 @@ func CompleteTask(filepath string, id int) error {
 }
 
 func DeleteTask(filepath string, id int) error {
+	filepath, err := resolvePath(filepath)
+	if err != nil {
+		return err
+	}
+
 	if err := ensureStoreDir(filepath); err != nil {
 		return err
 	}
