@@ -26,7 +26,7 @@ Examples:
 			os.Exit(1)
 		}
 
-		err = store.DeleteTask("tasks.csv", id)
+		err = store.DeleteTask("~/.tasks/tasks.csv", id)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

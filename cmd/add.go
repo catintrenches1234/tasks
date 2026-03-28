@@ -27,7 +27,7 @@ Examples:
 	Run: func(cmd *cobra.Command, args []string) {
 		description := strings.Join(args, " ")
 
-		err := store.AddTask("tasks.csv", description)
+		err := store.AddTask("~/.tasks/tasks.csv", description)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

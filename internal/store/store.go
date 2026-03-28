@@ -3,15 +3,25 @@ package store
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/catintrenches1234/tasks/internal/model"
 )
 
+func ensureStoreDir(path string) error {
+	dir := filepath.Dir(path)
+	return os.MkdirAll(dir, 0o700)
+}
+
 func AddTask(filepath string, description string) error {
+	if err := ensureStoreDir(filepath); err != nil {
+		return err
+	}
+
 	f, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
-		return nil
+		return err
 	}
 	defer f.Close()
 
@@ -65,6 +75,10 @@ func ListTasks(filepath string, showAll bool) ([]model.Task, error) {
 }
 
 func CompleteTask(filepath string, id int) error {
+	if err := ensureStoreDir(filepath); err != nil {
+		return err
+	}
+
 	f, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err
@@ -98,6 +112,10 @@ func CompleteTask(filepath string, id int) error {
 }
 
 func DeleteTask(filepath string, id int) error {
+	if err := ensureStoreDir(filepath); err != nil {
+		return err
+	}
+
 	f, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err
@@ -105,7 +123,7 @@ func DeleteTask(filepath string, id int) error {
 	defer f.Close()
 
 	if err = LockFile(f); err != nil {
-		return nil
+		return err
 	}
 	defer UnlockFile(f)
 

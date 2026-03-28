@@ -26,7 +26,7 @@ Examples:
     tasks list --all
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		tasks, err := store.ListTasks("tasks.csv", showAll)
+		tasks, err := store.ListTasks("~/.tasks/tasks.csv", showAll)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

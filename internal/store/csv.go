@@ -14,6 +14,9 @@ import (
 func LoadTasks(filepath string) ([]model.Task, error) {
 	f, err := os.Open(filepath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return []model.Task{}, nil
+		}
 		return nil, err
 	}
 	defer f.Close()
@@ -73,6 +76,10 @@ func LoadTasks(filepath string) ([]model.Task, error) {
 }
 
 func SaveTasks(filepath string, tasks []model.Task) error {
+	if err := ensureStoreDir(filepath); err != nil {
+		return err
+	}
+
 	f, err := os.Create(filepath)
 	if err != nil {
 		return err
