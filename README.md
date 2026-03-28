@@ -14,6 +14,14 @@ This project provides a terminal-based task manager with support for:
 - storing tasks in `~/.tasks/tasks.csv`
 - file locking to prevent concurrent read/write access
 
+## Install
+
+```bash
+go install github.com/your-username/your-cli@latest
+```
+
+Make sure $(go env GOPATH)/bin is in your PATH.
+
 ## Commands
 
 ### Add a task
